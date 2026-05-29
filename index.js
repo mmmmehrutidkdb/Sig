@@ -1,40 +1,47 @@
 export default {
   name: "SigmaAura",
-  description: "Dio's ultimate fake profile themes, effects, and sigma aura for Revenge",
+  description: "Dio's Fake Profile Themes & Effects - Sigma Edition",
   author: "Dio",
-  version: "1.0.0",
+  version: "1.0.1",
 
   start() {
-    console.log("[SigmaAura] Dio's sigma mode loaded - Fake themes enabled");
+    console.log("[SigmaAura] Dio's sigma aura injected - Fake themes ready");
 
-    // Core FPTE Logic: Inject zero-width characters for themes/effects
-    function applyFakeTheme(themeColor, effectId) {
-      const bioField = document.querySelector('textarea[placeholder*="About Me"]') || 
-                       document.querySelector('input[placeholder*="About Me"]');
-      
-      if (bioField) {
-        const zeroWidth = '\u200B\u200C\u200D\u2060'; // Invisible chars
-        const encoded = `\( {zeroWidth} \){themeColor}\( {zeroWidth} \){effectId}`;
-        bioField.value += encoded;
-        bioField.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        window.alert("SigmaAura: Fake theme applied! Save your profile.");
+    function applySigmaTheme(color = "#ff00ff", effect = "420") {
+      const bioInput = document.querySelector('textarea[placeholder*="About Me"], input[placeholder*="About Me"]');
+      if (bioInput) {
+        const zw = '\u200B\u200C\u200D\u2060\uFEFF';
+        bioInput.value += `\( {zw} \){color}\( {zw} \){effect}`;
+        bioInput.dispatchEvent(new Event('input', { bubbles: true }));
+        alert("✅ SigmaAura by Dio: Fake theme injected! SAVE your profile now.");
       } else {
-        window.alert("Open your profile editor first");
+        alert("Open your Edit Profile screen first");
       }
     }
 
-    // Register Sigma command
-    const cmd = Revenge?.commands || window.commands;
-    if (cmd) {
-      cmd.register({
+    const commands = window.Revenge?.commands || window.commands;
+    if (commands?.register) {
+      commands.register({
         name: "sigmaaura",
-        description: "Apply fake profile theme/effect by Dio",
+        description: "Apply fake profile theme & effect",
         options: [
-          { name: "theme", type: "string", description: "Hex color like #ff00ff" },
+          { name: "color", type: "string", description: "Hex color e.g. #ff00ff" },
           { name: "effect", type: "string", description: "Effect ID" }
         ],
-        execute: (args) => {
+        execute: (args) => applySigmaTheme(args.color, args.effect)
+      });
+    }
+
+    setInterval(() => {
+      const els = document.querySelectorAll('[class*="profile"], .avatar');
+      els.forEach(el => {
+        if (el) el.style.boxShadow = "0 0 30px #00ffff, 0 0 50px #ff00ff";
+      });
+    }, 2000);
+  },
+
+  stop() {}
+};        execute: (args) => {
           const theme = args.theme || "#00ff00";
           const effect = args.effect || "1";
           applyFakeTheme(theme, effect);
